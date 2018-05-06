@@ -100,34 +100,81 @@ BYTE * read_compressed_file(const char *filename, long *size) {
 }
 
 int main() {
-	BYTE * data;
-	long size;
-	read_file("character_page.png", &data, &size);
+			
+	printf("输入1压缩,输入2解压\n");
+	int input = 0;
+	scanf("%d", &input);
 
-	for (int i = 0; i < size; i++) {
-		table.addWeight(data[i]);
+	switch (input) {
+	case 1: {
+
+		printf("输入被压缩的文件地址:\n");
+		char szPath[128];
+		scanf("%s", szPath);
+
+		BYTE * data;
+		long size;
+		read_file(szPath, &data, &size);
+
+		for (int i = 0; i < size; i++) {
+			table.addWeight(data[i]);
+		}
+
+		huffman huff;
+		Encode encoder;
+
+		long dst_size = 0;
+		tree_node_t *p = huff.createHuffmanTree(&table);
+		BYTE * encoded_data = encoder.encode(&huff, data, size, &dst_size);
+
+		free(data);
+
+		file_header_t header;
+		header.bit_total = dst_size;
+		header.size = dst_size / 8 + (dst_size % 8 == 0 ? 0 : 1);
+
+		printf("输入压缩后的文件地址:");
+		char szPath2[128];
+		scanf("%s", szPath2);
+
+		write_compressed_file(szPath2, table.getdata(), encoded_data, header);
+
+		free(encoded_data);
+
+		printf("已经完成");
+
+		int ppp;
+		scanf("%d", &ppp);
+
+		break; 
+	}
+	case 2: {
+		printf("输入待解压的文件地址:\n");
+		char szPath3[128];
+		scanf("%s", szPath3);
+
+		long size2 = 0;
+		BYTE *decompressed_data = read_compressed_file(szPath3, &size2);
+
+		printf("输入解压后的文件地址:");
+		char szPath4[128];
+		scanf("%s", szPath4);
+
+		write_file(szPath4, decompressed_data, size2);
+
+
+		printf("已经完成");
+
+		int ppp;
+		scanf("%d", &ppp);
+
+		break;
 	}
 
-	huffman huff;
-	Encode encoder;
+		
+	}
 
-	long dst_size = 0;
-	tree_node_t *p = huff.createHuffmanTree(&table);
-	BYTE * encoded_data = encoder.encode(&huff, data, size, &dst_size);
 
-	free(data);
-
-	file_header_t header;
-	header.bit_total = dst_size;
-	header.size = dst_size / 8 + (dst_size % 8 == 0 ? 0 : 1);
-	write_compressed_file("com_jpg.jpg", table.getdata(), encoded_data, header);
-
-	free(encoded_data);
-
-	long size2 = 0;
-	BYTE *decompressed_data = read_compressed_file("com_jpg.jpg", &size2);
-
-	write_file("finished.txt", decompressed_data, size2);
 
 	return 0;
 }

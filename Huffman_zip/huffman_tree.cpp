@@ -72,7 +72,7 @@ tree_node_t * huffman::createHuffmanTree(WeightTable *table) {
 				continue;
 
 
-			if (tree->weight < second_minest) {
+			if (tree->weight <= second_minest) {
 				second_minest = tree->weight;
 				position_of_second_minest = i;
 			}
@@ -106,8 +106,8 @@ tree_node_t * huffman::createHuffmanTree(WeightTable *table) {
 CStack* huffman::getHuffmanCode(int buff) {
 
 	tree_node_t * tree = code_group[buff];
-	struct tree_node_s  *node = tree->parent;
-	struct tree_node_s  *child = tree;
+	tree_node_t  *node = tree->parent;
+	tree_node_t  *child = tree;
 
 	CStack *result = new CStack;
 
