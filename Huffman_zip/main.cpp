@@ -143,8 +143,6 @@ int main() {
 
 		printf("已经完成");
 
-		int ppp;
-		scanf("%d", &ppp);
 
 		break; 
 	}
@@ -165,16 +163,12 @@ int main() {
 
 		printf("已经完成");
 
-		int ppp;
-		scanf("%d", &ppp);
 
 		break;
 	}
 
 		
 	}
-
-
 
 	return 0;
 }
